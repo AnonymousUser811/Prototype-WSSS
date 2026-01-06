@@ -7,7 +7,7 @@ import torch.nn.functional as Func
 from inference import keep_largest_connected_components
 
 
-def RandomBrightnessContrast(img, brightness_limit=0.2, contrast_limit=0.2, p=0.5):
+def RandomBrightnessContrast(img, label, brightness_limit=0.2, contrast_limit=0.2, p=0.5):
     output = torch.zeros_like(img)
     threshold = 0.5
 
@@ -23,7 +23,7 @@ def RandomBrightnessContrast(img, brightness_limit=0.2, contrast_limit=0.2, p=0.
             output[i] = torch.clamp(output[i] + (output[i] - threshold * 255.0) * contrast, 0., 255.)
 
         output[i] = output[i] / 255.0 * (img_max - img_min) + img_min
-    return output
+    return output, label
 
 def auxiliary_loss(output, output_c, output_aug, device):
     pseudo_pred = 0.5 * output + 0.5 * output_c
